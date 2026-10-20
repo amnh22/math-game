@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>رحلة الأعداد مع بطلات أبلة آمنة</title>
+<style>
+:root{--ink:#343567;--pink:#dc4588;--purple:#7454c6}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;color:var(--ink);
+background:linear-gradient(155deg,#e1f8ff,#fff0f7 55%,#eee6ff);
+min-height:100vh;text-align:center}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;
+background:radial-gradient(circle at 12% 18%,#ffffffaa 0 45px,transparent 47px),
+radial-gradient(circle at 90% 40%,#ffffff88 0 75px,transparent 77px)}
+main{position:relative;max-width:800px;margin:auto;padding:24px 16px 36px}
+.top{font-size:13px;line-height:1.9;margin-bottom:18px}
+.card{background:#ffffffed;border:3px solid white;border-radius:32px;
+padding:28px 22px;box-shadow:0 16px 45px #75609a20}
+.badge{display:inline-block;background:#f1eaff;border-radius:30px;
+padding:9px 18px;color:#6543a3;font-size:14px}
+.hero{font-size:90px;margin:16px 0;filter:drop-shadow(0 8px 5px #bba1d944)}
+h1{font-size:clamp(27px,6vw,43px);line-height:1.5;margin:12px 0}
+h1 span{color:var(--pink)}
+h2{font-size:25px;line-height:1.7}
+p{line-height:1.9}
+button,input{font:inherit}
+button{cursor:pointer;border:0;border-radius:18px;padding:16px 22px;
+font-weight:bold;line-height:1.6;touch-action:manipulation}
+button:focus-visible,input:focus-visible{outline:3px solid #32356c;outline-offset:4px}
+.primary{background:linear-gradient(120deg,#9764db,#d95399);color:white;
+box-shadow:0 6px 0 #8b429a;width:100%;font-size:21px;margin:12px 0}
+.primary:active{transform:translateY(3px);box-shadow:0 3px 0 #8b429a}
+.secondary{background:#eee9fa;color:var(--ink);margin:8px}
+input{width:100%;max-width:400px;padding:15px;border:2px solid #e0d5f2;
+border-radius:16px;text-align:center;background:white;margin:12px 0}
+.path{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:20px 0}
+.island{background:#f4effa;border:2px solid transparent;border-radius:15px;
+padding:10px 8px;font-size:12px;flex:1;min-width:85px}
+.island.active{border-color:#b16bce;background:#f7e8ff}
+.island.done{background:#e3f5ec}
+.stats{display:flex;justify-content:space-between;gap:10px;font-weight:bold;
+font-size:15px;margin:15px 0}
+.track{height:12px;border-radius:20px;background:#ede5f6;overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#8e6bd2,#ed80ae);
+transition:width .4s}
+.question{font-size:clamp(25px,5vw,36px);line-height:1.8;margin:24px 0}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.option{background:#fff;border:2px solid #e3d8f3;color:var(--ink);
+min-height:78px;font-size:21px;transition:background .15s}
+.option:not(:disabled):hover{background:#f5ecff;border-color:#b783d5}
+.option:disabled{cursor:default;opacity:1}
+.option.correct{background:#ddf6e8;border-color:#39a879;color:#175a3d}
+.option.wrong{background:#ffe6ed;border-color:#e96e91;color:#95324f}
+.feedback{min-height:66px;font-weight:bold;line-height:1.9;padding-top:15px}
+footer{font-size:12px;line-height:2;margin-top:24px}
+[hidden]{display:none!important}
+.result-score{font-size:48px;color:var(--pink);font-weight:bold;margin:20px}
+.results{width:100%;border-collapse:collapse;margin:20px 0}
+.results td,.results th{padding:12px 5px;border-bottom:1px solid #eee5f7;
+font-size:14px}
+.note{font-size:13px;color:#77718f}
+@media(max-width:480px){
+.card{padding:23px 15px}.options{grid-template-columns:1fr}
+.option{min-height:64px;font-size:20px}.hero{font-size:75px}
+.island{min-width:70px;font-size:11px}.stats{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{body{background:white}.no-print{display:none!important}
+.card{box-shadow:none;border:1px solid #ddd}}
+</style>
+</head>
+<body>
+<main>
+<div class="top">المدرسة الابتدائية الثامنة والثلاثون (الطفولة المبكرة)</div>
+
+<section id="home" class="card">
+<div class="badge">مبادرة تعليمية • الصف الثاني الابتدائي</div>
+<div class="hero" aria-hidden="true">🏰🌈</div>
+<h1>رحلة الأعداد<br><span>مع بطلات أبلة آمنة</span></h1>
+<p><b>نقرأ، نكتب، ونجمع نجوم التميّز! ⭐</b><br>
+خمس مراحل ممتعة تأخذك من العشرات إلى المئات.</p>
+<div id="homePath" class="path"></div>
+<label for="player">ما اسمك يا بطلة؟ <small>(اختياري)</small></label><br>
+<input id="player" maxlength="35" placeholder="اكتبي اسمك هنا" autocomplete="off">
+<p class="note">لكل سؤال إجابة واحدة، وكل إجابة صحيحة تكسبك نجمة.<br>
+الهدف أن نتعلم؛ لا يوجد مؤقّت، خذي وقتك 🌷</p>
+<button id="start" class="primary">✨ ابدئي المغامرة</button>
+</section>
+
+<section id="game" class="card" hidden>
+<div id="stageBadge" class="badge"></div>
+<div id="gamePath" class="path"></div>
+<div class="stats">
+<span id="counter"></span><span id="stars"></span>
+</div>
+<div class="track" role="progressbar" aria-label="تقدم الرحلة"
+aria-valuemin="0" aria-valuemax="25" aria-valuenow="0" id="progress">
+<div id="fill" class="fill"></div>
+</div>
+<p id="instruction"></p>
+<h2 id="question" class="question" tabindex="-1"></h2>
+<div id="options" class="options"></div>
+<div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+<button id="next" class="primary" hidden>التالي ←</button>
+</section>
+
+<section id="stageEnd" class="card" hidden>
+<div class="hero" id="stageIcon" aria-hidden="true"></div>
+<h2 id="stageTitle"></h2>
+<p id="stageMessage"></p>
+<button id="continue" class="primary"></button>
+</section>
+
+<section id="finish" class="card" hidden>
+<div class="hero" aria-hidden="true">👑🏆</div>
+<div class="badge">إنجاز رحلة الأعداد</div>
+<h2 id="finishName"></h2>
+<div id="total" class="result-score"></div>
+<p id="encouragement"></p>
+<table class="results">
+<thead><tr><th>المرحلة</th><th>النجوم</th></tr></thead>
+<tbody id="breakdown"></tbody>
+</table>
+<p class="note">يمكن تصوير النتيجة وإرسالها إلى المعلمة.<br>
+النتائج تظهر على هذا الجهاز، ولا تُرسل تلقائيًا.</p>
+<div class="no-print">
+<button id="restart" class="primary">🌈 رحلة جديدة</button>
+<button id="print" class="secondary">🖨️ طباعة النتيجة</button>
+</div>
+</section>
+
+<footer>
+إعداد المعلمة: آمنة الموسى<br>
+مديرة المدرسة: علياء عسيري
+</footer>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const arabic=n=>String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
+
+const ones=["","واحد","اثنان","ثلاثة","أربعة","خمسة","ستة","سبعة","ثمانية","تسعة"];
+const teens=["عشرة","أحد عشر","اثنا عشر","ثلاثة عشر","أربعة عشر",
+"خمسة عشر","ستة عشر","سبعة عشر","ثمانية عشر","تسعة عشر"];
+const tens=["","","عشرون","ثلاثون","أربعون","خمسون","ستون","سبعون","ثمانون","تسعون"];
+const hundreds=["","مئة","مئتان","ثلاثمئة","أربعمئة","خمسمئة",
+"ستمئة","سبعمئة","ثمانمئة","تسعمئة"];
+
+function words(n){
+ if(n===0)return "صفر";
+ if(n<10)return ones[n];
+ if(n<20)return teens[n-10];
+ if(n<100)return n%10?ones[n%10]+" و"+tens[Math.floor(n/10)]:tens[n/10];
+ return hundreds[Math.floor(n/100)]+(n%100?" و"+words(n%100):"");
+}
+
+/* كل سؤال: العدد الصحيح، طريقة السؤال، البدائل.
+   r = قراءة العدد، w = كتابته بالأرقام */
+const stages=[
+{name:"بوابة البداية",icon:"🌸",hint:"نبدأ بأعداد حتى ٩٩",
+ qs:[
+ [12,"r",[12,20,21,11]],
+ [25,"w",[52,25,35,24]],
+ [40,"r",[14,4,40,44]],
+ [63,"w",[36,60,73,63]],
+ [89,"r",[98,79,88,89]]
+]},
+{name:"قصر المئات",icon:"🏰",hint:"نتعرف إلى المئات الكاملة",
+ qs:[
+ [100,"r",[10,100,1,110]],
+ [300,"w",[30,300,3,330]],
+ [500,"r",[50,5,500,550]],
+ [700,"w",[70,770,700,7]],
+ [900,"r",[90,990,9,900]]
+]},
+{name:"جسر الأعداد",icon:"🌈",hint:"نقرأ ونكتب المئات والعشرات والآحاد",
+ qs:[
+ [123,"r",[132,213,123,321]],
+ [234,"w",[243,234,324,432]],
+ [356,"r",[365,536,356,653]],
+ [671,"w",[617,761,671,167]],
+ [842,"r",[824,482,248,842]]
+]},
+{name:"سر الصفر",icon:"🔍",hint:"انتبهي إلى مكان الصفر داخل العدد",
+ qs:[
+ [205,"r",[250,205,25,502]],
+ [304,"w",[340,34,403,304]],
+ [470,"r",[407,47,470,704]],
+ [608,"w",[680,608,68,806]],
+ [90,"r",[900,9,90,909]]
+]},
+{name:"كنز البطلات",icon:"💎",hint:"تحديات متنوعة حتى ٩٩٩",
+ qs:[
+ [719,"w",[791,719,197,710]],
+ [808,"r",[880,88,808,800]],
+ [960,"w",[906,690,96,960]],
+ [999,"r",[909,990,999,900]],
+ [417,"w",[471,714,417,147]]
+]}
+];
+
+let stage=0,index=0,scores=[0,0,0,0,0],answered=false,player="";
+function show(id){
+ ["home","game","stageEnd","finish"].forEach(x=>$(x).hidden=x!==id);
+ window.scrollTo({top:0,behavior:"auto"});
+}
+function path(target,current=-1){
+ $(target).replaceChildren();
+ stages.forEach((s,i)=>{
+  const d=document.createElement("div");
+  d.className="island"+(i===current?" active":i<current?" done":"");
+  d.textContent=(i<current?"✓":s.icon)+" "+s.name;
+  $(target).append(d);
+ });
+}
+function shuffle(arr){
+ const a=[...arr];
+ for(let i=a.length-1;i>0;i--){
+  const j=Math.floor(Math.random()*(i+1));
+  [a[i],a[j]]=[a[j],a[i]];
+ }
+ return a;
+}
+function render(){
+ answered=false;
+ show("game");
+ const s=stages[stage],q=s.qs[index],completed=stage*5+index;
+ $("stageBadge").textContent=s.icon+" "+s.name+" • "+s.hint;
+ path("gamePath",stage);
+ $("counter").textContent="السؤال "+arabic(index+1)+" من ٥";
+ $("stars").textContent="⭐ "+arabic(scores.reduce((a,b)=>a+b,0));
+ $("fill").style.width=completed/25*100+"%";
+ $("progress").setAttribute("aria-valuenow",completed);
+ $("instruction").textContent=q[1]==="r"?
+ "اختاري القراءة الصحيحة لهذا العدد:":"اختاري العدد الذي يطابق هذه الكلمات:";
+ $("question").textContent=q[1]==="r"?arabic(q[0]):words(q[0]);
+ $("feedback").textContent="";
+ $("next").hidden=true;
+ $("options").replaceChildren();
+ shuffle(q[2]).forEach(n=>{
+  const b=document.createElement("button");
+  b.className="option";
+  b.textContent=q[1]==="r"?words(n):arabic(n);
+  b.onclick=()=>answer(n,b,q);
+  b.dataset.number=n;
+  $("options").append(b);
+ });
+ $("question").focus();
+}
+function answer(n,button,q){
+ if(answered)return;
+ answered=true;
+ const correct=n===q[0];
+ if(correct)scores[stage]++;
+ [...$("options").children].forEach(b=>{
+  b.disabled=true;
+  if(Number(b.dataset.number)===q[0])b.classList.add("correct");
+ });
+ if(!correct)button.classList.add("wrong");
+ $("feedback").textContent=correct?
+ "أحسنتِ يا بطلة! حصلتِ على نجمة ⭐":
+ "نتعلم معًا 🌷 الإجابة الصحيحة: "+arabic(q[0])+" — "+words(q[0]);
+ $("stars").textContent="⭐ "+arabic(scores.reduce((a,b)=>a+b,0));
+ $("next").textContent=index===4?"نتيجة المرحلة ✨":"السؤال التالي ←";
+ $("next").hidden=false;
+}
+$("next").onclick=()=>{
+ if(!answered)return;
+ if(index<4){index++;render();return;}
+ show("stageEnd");
+ $("stageIcon").textContent=stages[stage].icon;
+ $("stageTitle").textContent="أكملتِ "+stages[stage].name+"!";
+ $("stageMessage").textContent="جمعتِ "+arabic(scores[stage])+
+ " من ٥ نجوم. "+(scores[stage]>=4?"أداء رائع يا بطلة!":"كل محاولة تقرّبك من الإتقان 🌷");
+ $("continue").textContent=stage===4?"👑 اكتشفي نتيجتك":
+ "إلى "+stages[stage+1].name+" ←";
+};
+$("continue").onclick=()=>{
+ if(stage<4){stage++;index=0;render();}
+ else finish();
+};
+function finish(){
+ show("finish");
+ const total=scores.reduce((a,b)=>a+b,0);
+ $("finishName").textContent=(player?"يا "+player+"، ":"")+"أكملتِ الرحلة! 🌟";
+ $("total").textContent=arabic(total)+" / ٢٥ ⭐";
+ $("encouragement").textContent=total>=23?
+ "بطلة الأعداد المتألقة! أتقنتِ تحديات الرحلة 👑":
+ total>=18?"مستكشفة الأعداد المتميزة! واصلي تألقك 🌟":
+ "مستكشفة الأعداد المثابرة! أعيدي الرحلة واجمعي نجومًا أكثر 🌷";
+ $("breakdown").replaceChildren();
+ stages.forEach((s,i)=>{
+  const tr=document.createElement("tr"),a=document.createElement("td"),
+  b=document.createElement("td");
+  a.textContent=s.icon+" "+s.name;
+  b.textContent=arabic(scores[i])+" / ٥";
+  tr.append(a,b);$("breakdown").append(tr);
+ });
+}
+$("start").onclick=()=>{
+ player=$("player").value.trim();
+ stage=0;index=0;scores=[0,0,0,0,0];render();
+};
+$("restart").onclick=()=>show("home");
+$("print").onclick=()=>window.print();
+path("homePath");
+</script>
+</body>
+</html>
