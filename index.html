@@ -306,5 +306,113 @@ $("restart").onclick=()=>show("home");
 $("print").onclick=()=>window.print();
 path("homePath");
 </script>
+<script>
+/* اشتراط اسم الطالبة قبل بدء الرحلة */
+const nameField = document.getElementById("player");
+nameField.required = true;
+
+const optionalLabel = document.querySelector('label[for="player"] small');
+if (optionalLabel) optionalLabel.remove();
+
+const previousStart = document.getElementById("start").onclick;
+document.getElementById("start").onclick = function () {
+  nameField.setCustomValidity(
+    nameField.value.trim() ? "" : "اكتبي اسمك ليظهر في شهادة الإتقان 🌷"
+  );
+  if (!nameField.reportValidity()) return;
+  previousStart();
+};
+nameField.addEventListener("input", () => nameField.setCustomValidity(""));
+
+/* إظهار الشهادة عند الحصول على الدرجة الكاملة فقط */
+const previousFinish = finish;
+finish = function () {
+  previousFinish();
+
+  document.getElementById("certificateButton")?.remove();
+  document.getElementById("certificateMessage")?.remove();
+
+  const fullScore = scores.reduce((a, b) => a + b, 0) === 25;
+  const message = document.createElement("p");
+  message.id = "certificateMessage";
+  message.textContent = fullScore
+    ? "مبارك يا بطلة! أتقنتِ جميع الأسئلة واستحققتِ شهادتك 👑"
+    : "شهادة الإتقان بانتظارك! أعيدي الرحلة وأجيبي عن جميع الأسئلة إجابة صحيحة 🌷";
+
+  document.getElementById("breakdown").parentElement.after(message);
+
+  if (fullScore) {
+    const button = document.createElement("button");
+    button.id = "certificateButton";
+    button.className = "primary no-print";
+    button.textContent = "👑 تحميل شهادة الإتقان باسمي";
+    button.onclick = downloadCertificate;
+    message.after(button);
+  }
+};
+
+/* إنشاء شهادة باسم الطالبة وتحميلها صورة */
+function downloadCertificate() {
+  if (scores.reduce((a, b) => a + b, 0) !== 25) return;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 1600;
+  canvas.height = 1120;
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillStyle = "#fffafd";
+  ctx.fillRect(0, 0, 1600, 1120);
+
+  ctx.strokeStyle = "#a48bd2";
+  ctx.lineWidth = 12;
+  ctx.strokeRect(35, 35, 1530, 1050);
+  ctx.strokeStyle = "#e7b6d1";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(58, 58, 1484, 1004);
+
+  /* زينة هادئة */
+  [[105,105],[1495,105],[105,1015],[1495,1015]].forEach(([x,y]) => {
+    ctx.beginPath();
+    ctx.arc(x, y, 20, 0, Math.PI * 2);
+    ctx.fillStyle = "#e7b6d1";
+    ctx.fill();
+  });
+
+  ctx.direction = "rtl";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  function line(text, y, size, color = "#41416b", bold = false) {
+    ctx.font = ${bold ? "bold " : ""}${size}px Tahoma, Arial;
+    while (ctx.measureText(text).width > 1360 && size > 18) {
+      size -= 2;
+      ctx.font = ${bold ? "bold " : ""}${size}px Tahoma, Arial;
+    }
+    ctx.fillStyle = color;
+    ctx.fillText(text, 800, y);
+  }
+
+  line("المدرسة الابتدائية الثامنة والثلاثون (الطفولة المبكرة)", 145, 35);
+  line("شهادة إتقان", 265, 90, "#8758b5", true);
+  line("تُمنح هذه الشهادة للبطلة", 375, 39);
+  line(player, 475, 76, "#cf4f8b", true);
+
+  line("لإتقانها قراءة الأعداد وكتابتها حتى ٩٩٩", 590, 43, "#41416b", true);
+  line("وإجابتها عن جميع أسئلة الرحلة إجابة صحيحة", 660, 37);
+  line("في مبادرة", 730, 30);
+  line("«رحلة الأعداد مع بطلات أبلة آمنة»", 790, 44, "#8758b5", true);
+  line("النتيجة: ٢٥ من ٢٥ — تميّز يستحق الفخر", 870, 33, "#cf4f8b", true);
+
+  line("إعداد المعلمة: آمنة الموسى", 965, 30);
+  line("مديرة المدرسة: علياء عسيري", 1015, 30);
+
+  const link = document.createElement("a");
+  link.download = "شهادة-إتقان-الأعداد.png";
+  link.href = canvas.toDataURL("image/png");
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+</script>
 </body>
 </html>
