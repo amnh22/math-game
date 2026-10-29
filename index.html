@@ -383,10 +383,10 @@ function downloadCertificate() {
   ctx.textBaseline = "middle";
 
   function line(text, y, size, color = "#41416b", bold = false) {
-    ctx.font = ${bold ? "bold " : ""}${size}px Tahoma, Arial;
+   ctx.font = (bold ? "bold " : "") + size + "px Tahoma, Arial";;
     while (ctx.measureText(text).width > 1360 && size > 18) {
       size -= 2;
-      ctx.font = ${bold ? "bold " : ""}${size}px Tahoma, Arial;
+     ctx.font = (bold ? "bold " : "") + size + "px Tahoma, Arial";;
     }
     ctx.fillStyle = color;
     ctx.fillText(text, 800, y);
